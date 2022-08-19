@@ -21,13 +21,15 @@ const vendors = [
 
 const terms = [
   { id: 0, title: 'Не выбрано' },
-  { id: 0, title: 'DDP Москва' },
-  { id: 0, title: 'ФОБ Шень-жень' },
-  { id: 0, title: 'Казахстан/узбекистан' },
+  { id: 1, title: 'DDP Москва' },
+  { id: 2, title: 'ФОБ Шень-жень' },
+  { id: 3, title: 'Казахстан/узбекистан' },
 ]
 
 const selectedSegment = ref({ id: 0, title: 'Не выбрано' })
 const selectedVendor = ref({ id: 0, title: 'Не выбрано', description: 'Выберите вендора' })
+const selectedTerms = ref({ id: 0, title: 'Не выбрано' })
+const isSubmitLoading = ref(false)
 
 function handleSelectSegment($event: any) {
   const value = $event.target.value
@@ -37,6 +39,18 @@ function handleSelectSegment($event: any) {
 function handleSelectVendor($event: any) {
   const value = $event.target.value
   selectedVendor.value = vendors.find(item => value === item.title) ?? vendors[0]
+}
+
+function handleSelectTerms($event: any) {
+  const value = $event.target.value
+  selectedTerms.value = terms.find(item => value === item.title) ?? terms[0]
+}
+
+function handleSubmit() {
+  isSubmitLoading.value = true
+  setTimeout(() => {
+    isSubmitLoading.value = false
+  }, 1000)
 }
 </script>
 
@@ -113,7 +127,7 @@ function handleSelectVendor($event: any) {
         Условия поставки
       </div>
       <div class="configurator-form__form-element">
-        <select :value="terms.title">
+        <select :value="selectedTerms.title" @input="handleSelectTerms">
           <option v-for="item in terms">{{ item.title }}</option>
         </select>
       </div>
@@ -127,7 +141,12 @@ function handleSelectVendor($event: any) {
     </div>
 
     <div class="configurator-form__submit">
-      <button>Отправить</button>
+      <button v-if="isSubmitLoading" disabled>
+        Отправка...
+      </button>
+      <button v-else @click="handleSubmit">
+        Отправить
+      </button>
     </div>
 
   </div>

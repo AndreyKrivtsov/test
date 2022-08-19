@@ -10,12 +10,9 @@ const router = createRouter({
       component: Configurator
     },
     // {
-    //   path: '/new',
-    //   name: 'new',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/NewOrderView.vue')
+    //   path: '/configurator',
+    //   name: 'configurator2',
+    //   component: () => import('../views/Configurator.vue')
     // }
   ]
 })

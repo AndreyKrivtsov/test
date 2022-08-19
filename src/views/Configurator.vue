@@ -13,6 +13,9 @@ import ConfiguratorForm from '../components/ConfiguratorForm.vue'
 
 <style scoped>
 .configurator {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
