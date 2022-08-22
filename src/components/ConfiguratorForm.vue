@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import Input from "@/ui/Input.vue";
 
 defineProps<{
   msg: string
@@ -29,6 +30,8 @@ const terms = [
 const selectedSegment = ref({ id: 0, title: 'Не выбрано' })
 const selectedVendor = ref({ id: 0, title: 'Не выбрано', description: 'Выберите вендора' })
 const selectedTerms = ref({ id: 0, title: 'Не выбрано' })
+const slider = ref(50)
+const date = ref('')
 const isSubmitLoading = ref(false)
 
 function handleSelectSegment($event: any) {
@@ -52,6 +55,10 @@ function handleSubmit() {
     isSubmitLoading.value = false
   }, 1000)
 }
+
+function fnMarkerLabel(value) {
+  return `${value}%`
+}
 </script>
 
 <template>
@@ -59,30 +66,16 @@ function handleSubmit() {
 
     <div class="configurator-form__group">
       <div style="margin-bottom: 24px">
-        <div class="configurator-form__title">
-          Контактная информация
-        </div>
-        <div class="configurator-form__form-element">
-          <label>Телефон</label>
-          <input/>
-        </div>
-        <div class="configurator-form__form-element">
-          <label>Имя</label>
-          <input/>
-        </div>
+        <Input label="Контактная информация" />
+        <Input label="Телефон" />
+        <Input label="Имя" />
       </div>
 
       <div class="configurator-form__title">
         Информация о конечном заказчике
       </div>
-      <div class="configurator-form__form-element">
-        <label>Название компании</label>
-        <input/>
-      </div>
-      <div class="configurator-form__form-element">
-        <label>ИНН</label>
-        <input/>
-      </div>
+      <Input label="Название компании" />
+      <Input label="ИНН" />
     </div>
 
 
@@ -136,8 +129,31 @@ function handleSubmit() {
         Ожидаемый срок поставки
       </div>
       <div class="configurator-form__form-element">
-        <input/>
+        <q-date
+            v-model="date"
+            minimal
+        />
       </div>
+
+      <div class="configurator-form__title" style="margin-top: 24px">
+        Размер предоплаты, {{ slider }}%
+      </div>
+      <div class="configurator-form__form-element" style="width: 90%; margin: auto">
+        <div style="width: 100%">
+          <q-slider v-model="slider" color="secondary" :min="30" :max="100" :markers="70" :marker-labels="fnMarkerLabel"/>
+        </div>
+        <div style="margin-left: auto">
+
+        </div>
+      </div>
+
+      <div class="configurator-form__title" style="margin-top: 24px">
+        Дополнительная информация
+      </div>
+      <div class="configurator-form__form-element">
+        <textarea rows="6" name="text" style="width: 100%" />
+      </div>
+
     </div>
 
     <div class="configurator-form__submit">

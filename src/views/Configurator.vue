@@ -4,9 +4,9 @@ import ConfiguratorForm from '../components/ConfiguratorForm.vue'
 
 <template>
   <div class="configurator">
-    <h1>
-      Конфигуратор
-    </h1>
+    <h4>
+      Создание нового заказа
+    </h4>
     <ConfiguratorForm  msg=""/>
   </div>
 </template>
