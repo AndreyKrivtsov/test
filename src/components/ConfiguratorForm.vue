@@ -1,59 +1,73 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import Input from "@/ui/Input.vue";
+import { putOrder } from '../api/orders'
+import CInput from '@/ui/CInput.vue'
+import CButton from '@/ui/CButton.vue'
+import CSelect, { SelectOption } from '@/ui/CSelect.vue'
+import CSlider from '@/ui/CSlider.vue'
 
 defineProps<{
   msg: string
 }>()
 
 const segments = [
-  { id: 0, title: 'Не выбрано' },
-  { id: 1, title: 'Серверы' },
-  { id: 2, title: 'СХД' },
-  { id: 3, title: 'Маршрутизаторы' },
+  { value: 1, label: 'Серверы' },
+  { value: 2, label: 'СХД' },
+  { value: 3, label: 'Маршрутизаторы' },
 ]
 
 const vendors = [
-  { id: 0, title: 'Не выбрано', description: 'Выберите вендора' },
-  { id: 1, title: 'IBM', description: 'Американская компания со штаб-квартирой в Армонке, один из крупнейших в мире производителей и поставщиков аппаратного и программного обеспечения, а также IТ-сервисов и консалтинговых услуг.' },
-  { id: 2, title: 'Dell', description: 'Американская корпорация, одна из крупнейших компаний в области производства компьютеров.' },
-  { id: 3, title: 'Cisco', description: 'Американская транснациональная компания, разрабатывающая и продающая сетевое оборудование, предназначенное в основном для крупных организаций и телекоммуникационных предприятий.' },
+  {
+    value: 1,
+    label: 'IBM',
+    description: 'Американская компания со штаб-квартирой в Армонке, один из крупнейших в мире производителей и поставщиков аппаратного и программного обеспечения, а также IТ-сервисов и консалтинговых услуг.'
+  },
+  {
+    value: 2,
+    label: 'Dell',
+    description: 'Американская корпорация, одна из крупнейших компаний в области производства компьютеров.'
+  },
+  {
+    value: 3,
+    label: 'Cisco',
+    description: 'Американская транснациональная компания, разрабатывающая и продающая сетевое оборудование, предназначенное в основном для крупных организаций и телекоммуникационных предприятий.'
+  },
 ]
 
 const terms = [
-  { id: 0, title: 'Не выбрано' },
-  { id: 1, title: 'DDP Москва' },
-  { id: 2, title: 'ФОБ Шень-жень' },
-  { id: 3, title: 'Казахстан/узбекистан' },
+  { value: 1, label: 'DDP Москва' },
+  { value: 2, label: 'ФОБ Шень-жень' },
+  { value: 3, label: 'Казахстан/узбекистан' },
 ]
 
-const selectedSegment = ref({ id: 0, title: 'Не выбрано' })
-const selectedVendor = ref({ id: 0, title: 'Не выбрано', description: 'Выберите вендора' })
-const selectedTerms = ref({ id: 0, title: 'Не выбрано' })
-const slider = ref(50)
+const phone = ref('')
+const name = ref('')
+const company = ref('')
+const inn = ref('')
+const selectedSegment = ref<SelectOption>(null)
+const selectedVendor = ref<SelectOption>(null)
+const selectedTerms = ref<SelectOption>(null)
+const quantity = ref(1)
+const prepayment = ref(50)
 const date = ref('')
+const additionalInfo = ref('')
 const isSubmitLoading = ref(false)
 
-function handleSelectSegment($event: any) {
-  const value = $event.target.value
-  selectedSegment.value = segments.find(item => value === item.title) ?? segments[0]
+function handleSelectSegment(event: SelectOption) {
+  console.log(event)
 }
 
-function handleSelectVendor($event: any) {
-  const value = $event.target.value
-  selectedVendor.value = vendors.find(item => value === item.title) ?? vendors[0]
+function handleSelectVendor(event: SelectOption) {
 }
 
-function handleSelectTerms($event: any) {
-  const value = $event.target.value
-  selectedTerms.value = terms.find(item => value === item.title) ?? terms[0]
+function handleSelectTerms(event: SelectOption) {
 }
 
-function handleSubmit() {
+async function handleSubmit() {
   isSubmitLoading.value = true
-  setTimeout(() => {
-    isSubmitLoading.value = false
-  }, 1000)
+  const result = await putOrder('тестовый запрос')
+  isSubmitLoading.value = false
+  console.log(result)
 }
 
 function fnMarkerLabel(value) {
@@ -63,39 +77,48 @@ function fnMarkerLabel(value) {
 
 <template>
   <div class="configurator-form">
-
     <div class="configurator-form__group">
-      <div style="margin-bottom: 24px">
-        <Input label="Контактная информация" />
-        <Input label="Телефон" />
-        <Input label="Имя" />
+      <div class="configurator-form__title">
+        Информация о заказчике
       </div>
 
-      <div class="configurator-form__title">
-        Информация о конечном заказчике
+      <div class="configurator-form__form-element">
+        <CInput
+            v-model="phone"
+            label="Телефон"
+        />
       </div>
-      <Input label="Название компании" />
-      <Input label="ИНН" />
+
+      <div class="configurator-form__form-element">
+        <CInput v-model="name" label="Имя"/>
+      </div>
+
+      <div class="configurator-form__form-element">
+        <CInput v-model="company" label="Название компании"/>
+      </div>
+
+      <div class="configurator-form__form-element">
+        <CInput v-model="inn" label="ИНН"/>
+      </div>
     </div>
 
 
     <div class="configurator-form__group">
       <div class="configurator-form__title">
-        Продуктовый сегмент
-      </div>
-      <div class="configurator-form__form-element">
-        <select :value="selectedSegment.title" @input="handleSelectSegment">
-          <option v-for="item in segments">{{ item.title }}</option>
-        </select>
+        Выберите продукт:
       </div>
 
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Вендор
-      </div>
       <div class="configurator-form__form-element">
-        <select :value="selectedVendor.title" @input="handleSelectVendor">
-          <option v-for="item in vendors">{{ item.title }}</option>
-        </select>
+        <CSelect
+            v-model="selectedSegment"
+            :options="segments"
+            @input="handleSelectSegment"
+            label="Продуктовый сегмент"
+        />
+      </div>
+
+      <div class="configurator-form__form-element">
+        <CSelect v-model="selectedVendor" :options="vendors" @input="handleSelectVendor" label="Вендор"/>
       </div>
 
 
@@ -103,66 +126,52 @@ function fnMarkerLabel(value) {
         Описание
       </div>
       <div class="configurator-form__form-element">
-        {{ selectedVendor.description }}
+        <span v-if="selectedVendor">
+          {{ selectedVendor.description }}
+        </span>
+        <span v-else>Описание появится после выбора продукта</span>
       </div>
     </div>
 
 
     <div class="configurator-form__group">
-      <div class="configurator-form__title">
-        Кол-во позиций
+      <div class="configurator-form__form-element">
+        <CInput type="number" v-model="quantity" label="Кол-во позиций"/>
       </div>
       <div class="configurator-form__form-element">
-        <input type="number" step="1" :value="1" />
-      </div>
-
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Условия поставки
-      </div>
-      <div class="configurator-form__form-element">
-        <select :value="selectedTerms.title" @input="handleSelectTerms">
-          <option v-for="item in terms">{{ item.title }}</option>
-        </select>
+        <CSelect v-model="selectedTerms" :options="terms" @input="handleSelectTerms" label="Условия поставки"/>
       </div>
 
       <div class="configurator-form__title" style="margin-top: 24px">
         Ожидаемый срок поставки
       </div>
       <div class="configurator-form__form-element">
-        <q-date
-            v-model="date"
-            minimal
-        />
+        <CInput type="date" v-model="date" />
       </div>
 
       <div class="configurator-form__title" style="margin-top: 24px">
-        Размер предоплаты, {{ slider }}%
+        Размер предоплаты, {{ prepayment }}%
       </div>
-      <div class="configurator-form__form-element" style="width: 90%; margin: auto">
+      <div class="configurator-form__form-element" style="width: 90%; margin: auto auto 20px;">
         <div style="width: 100%">
-          <q-slider v-model="slider" color="secondary" :min="30" :max="100" :markers="70" :marker-labels="fnMarkerLabel"/>
-        </div>
-        <div style="margin-left: auto">
-
+          <CSlider
+              v-model="prepayment"
+              :min="30"
+              :max="100"
+              :markers="70"
+              :marker-labels="fnMarkerLabel"
+          />
         </div>
       </div>
 
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Дополнительная информация
-      </div>
       <div class="configurator-form__form-element">
-        <textarea rows="6" name="text" style="width: 100%" />
+        <CInput label="Дополнительная информация" v-model="additionalInfo" type="textarea" />
       </div>
 
     </div>
 
     <div class="configurator-form__submit">
-      <button v-if="isSubmitLoading" disabled>
-        Отправка...
-      </button>
-      <button v-else @click="handleSubmit">
-        Отправить
-      </button>
+      <CButton :loading="isSubmitLoading" @click="handleSubmit">Отправить</CButton>
     </div>
 
   </div>
@@ -183,13 +192,16 @@ function fnMarkerLabel(value) {
 }
 
 .configurator-form__title {
-  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 20px;
   font-weight: bold;
   color: #9a9a9a;
 }
 
 .configurator-form__form-element {
-  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 20px;
   display: flex;
   flex-grow: 1;
 }

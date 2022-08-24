@@ -10,5 +10,15 @@ module.exports = {
   ],
   "parserOptions": {
     "ecmaVersion": "latest"
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "quotes": ["error", "single"],
+    "eqeqeq": ["error", "always"],
+    "computed-property-spacing": ["error", "never"],
+    // "func-call-spacing": ["error", "never"],
+    "brace-style": "error",
+    "jsx-quotes": ["error", "prefer-double"],
+    "object-curly-spacing": ["error", "always"]
   }
 }
