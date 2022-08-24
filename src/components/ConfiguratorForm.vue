@@ -1,66 +1,69 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { putOrder } from '../api/orders'
+import { putOrder } from '@/api/orders'
 import CInput from '@/ui/CInput.vue'
 import CButton from '@/ui/CButton.vue'
-import CSelect, { SelectOption } from '@/ui/CSelect.vue'
+import CSelect from '@/ui/CSelect.vue'
 import CSlider from '@/ui/CSlider.vue'
+import type { SelectOption } from '@/types'
 
 defineProps<{
   msg: string
 }>()
 
-const segments = [
-  { value: 1, label: 'Серверы' },
-  { value: 2, label: 'СХД' },
-  { value: 3, label: 'Маршрутизаторы' },
+const segments: SelectOption[] = [
+  { value: '1', label: 'Серверы' },
+  { value: '2', label: 'СХД' },
+  { value: '3', label: 'Маршрутизаторы' },
 ]
 
-const vendors = [
+const vendors: SelectOption[] = [
   {
-    value: 1,
+    value: '1',
     label: 'IBM',
     description: 'Американская компания со штаб-квартирой в Армонке, один из крупнейших в мире производителей и поставщиков аппаратного и программного обеспечения, а также IТ-сервисов и консалтинговых услуг.'
   },
   {
-    value: 2,
+    value: '2',
     label: 'Dell',
     description: 'Американская корпорация, одна из крупнейших компаний в области производства компьютеров.'
   },
   {
-    value: 3,
+    value: '3',
     label: 'Cisco',
     description: 'Американская транснациональная компания, разрабатывающая и продающая сетевое оборудование, предназначенное в основном для крупных организаций и телекоммуникационных предприятий.'
   },
 ]
 
-const terms = [
-  { value: 1, label: 'DDP Москва' },
-  { value: 2, label: 'ФОБ Шень-жень' },
-  { value: 3, label: 'Казахстан/узбекистан' },
+const terms: SelectOption[] = [
+  { value: '1', label: 'DDP Москва' },
+  { value: '2', label: 'ФОБ Шень-жень' },
+  { value: '3', label: 'Казахстан/узбекистан' },
 ]
 
 const phone = ref('')
 const name = ref('')
 const company = ref('')
 const inn = ref('')
-const selectedSegment = ref<SelectOption>(null)
-const selectedVendor = ref<SelectOption>(null)
-const selectedTerms = ref<SelectOption>(null)
+const selectedSegment = ref<SelectOption | undefined>()
+const selectedVendor = ref<SelectOption | undefined>()
+const selectedTerms = ref<SelectOption | undefined>()
 const quantity = ref(1)
 const prepayment = ref(50)
 const date = ref('')
 const additionalInfo = ref('')
 const isSubmitLoading = ref(false)
 
-function handleSelectSegment(event: SelectOption) {
+function handleSelectSegment(event: Event) {
   console.log(event)
 }
 
-function handleSelectVendor(event: SelectOption) {
+function handleSelectVendor(event: Event) {
+  console.log(event)
 }
 
-function handleSelectTerms(event: SelectOption) {
+function handleSelectTerms(event: Event) {
+  console.log(event)
 }
 
 async function handleSubmit() {
@@ -70,7 +73,7 @@ async function handleSubmit() {
   console.log(result)
 }
 
-function fnMarkerLabel(value) {
+function fnMarkerLabel(value: string) {
   return `${value}%`
 }
 </script>
@@ -101,7 +104,6 @@ function fnMarkerLabel(value) {
         <CInput v-model="inn" label="ИНН"/>
       </div>
     </div>
-
 
     <div class="configurator-form__group">
       <div class="configurator-form__title">

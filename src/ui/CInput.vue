@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
+import type { ValidationRule } from 'quasar'
 
 defineProps<{
   modelValue: string | number | undefined,
   label?: string,
   type?: InputType,
-  rules?: (value: string | number) => boolean
+  rules?: ValidationRule[] | undefined
 }>()
 
 type InputType =
@@ -22,10 +23,10 @@ type InputType =
     | 'date'
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | undefined): void,
+  (e: 'update:modelValue', value: string | number | null): void,
 }>()
 
-function handleInput(value: string) {
+function handleInput(value: string | number | null) {
   emit('update:modelValue', value)
 }
 </script>

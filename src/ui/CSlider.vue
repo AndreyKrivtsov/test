@@ -10,10 +10,10 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | undefined): void,
+  (e: 'update:modelValue', value: number | null): void,
 }>()
 
-function handleInput(value: string) {
+function handleInput(value: number | null) {
   emit('update:modelValue', value)
 }
 </script>

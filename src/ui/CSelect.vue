@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineEmits } from 'vue'
+import type { SelectOption } from '@/types'
 
 defineProps<{
   modelValue: SelectOption | undefined
@@ -7,14 +8,8 @@ defineProps<{
   label?: string
 }>()
 
-export interface SelectOption {
-  label: string
-  value: string
-  [key: string]: string
-}
-
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | undefined): void,
+  (e: 'update:modelValue', value: SelectOption): void,
 }>()
 
 // const double = computed<number>(() => {

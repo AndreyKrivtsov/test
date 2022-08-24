@@ -1,17 +1,22 @@
 import api from './api'
 
+interface OrderResponse {
+    [key: string]: string
+}
+
 export async function getOrders() {
-    return await api.post('crm.item.list', {
+    const result = await api.post<OrderResponse>('crm.item.list', {
         entityTypeId: 140,
         select: ['id', 'title'],
         filter: {
             ufCrm6IntConsumer: 403,
         }
     })
+    return result.data
 }
 
-export async function putOrder(description) {
-    return await api.post('crm.item.add', {
+export async function putOrder(description: string) {
+    const result = await api.post<OrderResponse>('crm.item.add', {
         entityTypeId: 140,
         fields: {
             ufCrm6Specification: {
@@ -21,4 +26,5 @@ export async function putOrder(description) {
             ufCrm6IntConsumer: 403
         }
     })
+    return result.data
 }
