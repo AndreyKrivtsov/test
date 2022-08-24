@@ -18,5 +18,6 @@ const emit = defineEmits<{
 
 <style scoped>
 .configurator-button {
+  width: 100%;
 }
 </style>

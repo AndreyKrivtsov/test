@@ -80,96 +80,97 @@ function fnMarkerLabel(value: string) {
 
 <template>
   <div class="configurator-form">
-    <div class="configurator-form__group">
-      <div class="configurator-form__title">
-        Информация о заказчике
-      </div>
 
-      <div class="configurator-form__form-element">
-        <CInput
-            v-model="phone"
-            label="Телефон"
-        />
-      </div>
+    <div class="configurator-form__flex">
+      <div class="configurator-form__group">
+        <div class="configurator-form__title">
+          Информация о заказчике
+        </div>
 
-      <div class="configurator-form__form-element">
-        <CInput v-model="name" label="Имя"/>
-      </div>
-
-      <div class="configurator-form__form-element">
-        <CInput v-model="company" label="Название компании"/>
-      </div>
-
-      <div class="configurator-form__form-element">
-        <CInput v-model="inn" label="ИНН"/>
-      </div>
-    </div>
-
-    <div class="configurator-form__group">
-      <div class="configurator-form__title">
-        Выберите продукт:
-      </div>
-
-      <div class="configurator-form__form-element">
-        <CSelect
-            v-model="selectedSegment"
-            :options="segments"
-            @input="handleSelectSegment"
-            label="Продуктовый сегмент"
-        />
-      </div>
-
-      <div class="configurator-form__form-element">
-        <CSelect v-model="selectedVendor" :options="vendors" @input="handleSelectVendor" label="Вендор"/>
-      </div>
-
-
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Описание
-      </div>
-      <div class="configurator-form__form-element">
-        <span v-if="selectedVendor">
-          {{ selectedVendor.description }}
-        </span>
-        <span v-else>Описание появится после выбора продукта</span>
-      </div>
-    </div>
-
-
-    <div class="configurator-form__group">
-      <div class="configurator-form__form-element">
-        <CInput type="number" v-model="quantity" label="Кол-во позиций"/>
-      </div>
-      <div class="configurator-form__form-element">
-        <CSelect v-model="selectedTerms" :options="terms" @input="handleSelectTerms" label="Условия поставки"/>
-      </div>
-
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Ожидаемый срок поставки
-      </div>
-      <div class="configurator-form__form-element">
-        <CInput type="date" v-model="date" />
-      </div>
-
-      <div class="configurator-form__title" style="margin-top: 24px">
-        Размер предоплаты, {{ prepayment }}%
-      </div>
-      <div class="configurator-form__form-element" style="width: 90%; margin: auto auto 20px;">
-        <div style="width: 100%">
-          <CSlider
-              v-model="prepayment"
-              :min="30"
-              :max="100"
-              :markers="70"
-              :marker-labels="fnMarkerLabel"
+        <div class="configurator-form__form-element">
+          <CInput
+              v-model="phone"
+              label="Телефон"
           />
+        </div>
+
+        <div class="configurator-form__form-element">
+          <CInput v-model="name" label="Имя"/>
+        </div>
+
+        <div class="configurator-form__form-element">
+          <CInput v-model="company" label="Название компании"/>
+        </div>
+
+        <div class="configurator-form__form-element">
+          <CInput v-model="inn" label="ИНН"/>
         </div>
       </div>
 
-      <div class="configurator-form__form-element">
-        <CInput label="Дополнительная информация" v-model="additionalInfo" type="textarea" />
+      <div class="configurator-form__group">
+        <div class="configurator-form__title">
+          Выберите продукт:
+        </div>
+
+        <div class="configurator-form__form-element">
+          <CSelect
+              v-model="selectedSegment"
+              :options="segments"
+              @input="handleSelectSegment"
+              label="Продуктовый сегмент"
+          />
+        </div>
+
+        <div class="configurator-form__form-element">
+          <CSelect v-model="selectedVendor" :options="vendors" @input="handleSelectVendor" label="Вендор"/>
+        </div>
+
+
+        <div class="configurator-form__title" style="margin-top: 24px">
+          Описание
+        </div>
+        <div class="configurator-form__form-element">
+        <span v-if="selectedVendor">
+          {{ selectedVendor.description }}
+        </span>
+          <span v-else>Описание появится после выбора продукта</span>
+        </div>
       </div>
 
+
+      <div class="configurator-form__group">
+        <div class="configurator-form__form-element">
+          <CInput type="number" v-model="quantity" label="Кол-во позиций"/>
+        </div>
+        <div class="configurator-form__form-element">
+          <CSelect v-model="selectedTerms" :options="terms" @input="handleSelectTerms" label="Условия поставки"/>
+        </div>
+
+        <div class="configurator-form__title" style="margin-top: 24px">
+          Ожидаемый срок поставки
+        </div>
+        <div class="configurator-form__form-element">
+          <CInput type="date" v-model="date" />
+        </div>
+
+        <div class="configurator-form__title" style="margin-top: 24px">
+          Размер предоплаты, {{ prepayment }}%
+        </div>
+        <div class="configurator-form__form-element" style="width: 90%; margin: auto auto 20px;">
+          <div style="width: 100%">
+            <CSlider
+                v-model="prepayment"
+                :min="30"
+                :max="100"
+                :markers="70"
+                :marker-labels="fnMarkerLabel"
+            />
+          </div>
+        </div>
+        <div class="configurator-form__form-element">
+          <CInput label="Дополнительная информация" v-model="additionalInfo" type="textarea" />
+        </div>
+      </div>
     </div>
 
     <div class="configurator-form__submit">
@@ -179,42 +180,43 @@ function fnMarkerLabel(value: string) {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .configurator-form {
-  width: 100%;
-  max-width: 500px;
-  text-align: left;
-}
-
-.configurator-form__group {
-  border: 1px solid #bebebe;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
-}
-
-.configurator-form__title {
-  margin-top: 10px;
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #9a9a9a;
-}
-
-.configurator-form__form-element {
-  width: 100%;
-  margin-bottom: 20px;
-  display: flex;
-  flex-grow: 1;
-}
-
-.configurator-form__form-element label {
-  flex-grow: 1;
-  color: #505050;
-  /*font-weight: bold;*/
-}
-
-.configurator-form__submit {
   margin-top: 20px;
+
+  .configurator-form__flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .configurator-form__group {
+      min-width: 350px;
+      max-width: 400px;
+      border: 1px solid #bebebe;
+      border-radius: 12px;
+      margin: 12px 10px 0 10px;
+      padding: 12px;
+    }
+
+    .configurator-form__title {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #9a9a9a;
+    }
+
+    .configurator-form__form-element {
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      flex-grow: 1;
+    }
+  }
+
+  .configurator-form__submit {
+    margin-top: 20px;
+    text-align: center;
+  }
 }
 </style>
