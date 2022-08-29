@@ -68,7 +68,26 @@ function handleSelectTerms(event: Event) {
 
 async function handleSubmit() {
   isSubmitLoading.value = true
-  const result = await putOrder('тестовый запрос')
+
+  const orderTextData =
+`
+  Телефон: ${phone.value}
+  Имя: ${name.value}
+  Компания: ${company.value}
+  ИНН: ${inn.value}
+
+  Сегмент: ${selectedSegment.value?.label ?? ''}
+  Вендор: ${selectedVendor.value?.label ?? ''}
+  Кол-во: ${quantity.value}
+  Предоплата: ${prepayment.value}
+
+  Доставка: ${selectedTerms.value?.label ?? ''}
+  Срок поставки: ${date.value}
+
+  Дополнительная информация: ${additionalInfo.value}
+`
+
+  const result = await putOrder(orderTextData)
   isSubmitLoading.value = false
   console.log(result)
 }
