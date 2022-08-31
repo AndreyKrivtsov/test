@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useQuasar } from 'quasar'
 import { putOrder } from '@/api/orders'
+import { getUser } from '@/api/users'
+import { addContact, getContact } from '@/api/contacts'
 import CInput from '@/ui/CInput.vue'
 import CButton from '@/ui/CButton.vue'
 import CSelect from '@/ui/CSelect.vue'
@@ -10,6 +13,8 @@ import type { SelectOption } from '@/types'
 defineProps<{
   msg: string
 }>()
+
+const $q = useQuasar()
 
 const segments: SelectOption[] = [
   { value: '1', label: 'Серверы' },
@@ -54,6 +59,55 @@ const date = ref('')
 const additionalInfo = ref('')
 const isSubmitLoading = ref(false)
 
+const errors = ref({
+  phone: '',
+  name: '',
+  company: '',
+  inn: '',
+  selectedSegment: '',
+  selectedVendor: '',
+  selectedTerms: '',
+  date: '',
+})
+
+function validate() {
+  let isError = false
+
+  if (!phone.value) {
+    isError = true
+  }
+
+  if (!name.value) {
+    isError = true
+  }
+
+  if (!company.value) {
+    isError = true
+  }
+
+  if (!inn.value) {
+    isError = true
+  }
+
+  if (!selectedSegment.value) {
+    isError = true
+  }
+
+  if (!selectedVendor.value) {
+    isError = true
+  }
+
+  if (!selectedTerms.value) {
+    isError = true
+  }
+
+  if (!date.value) {
+    isError = true
+  }
+
+  return !isError
+}
+
 function handleSelectSegment(event: Event) {
   console.log(event)
 }
@@ -67,29 +121,84 @@ function handleSelectTerms(event: Event) {
 }
 
 async function handleSubmit() {
+  if (!validate()) {
+    $q.notify({
+      color: 'red',
+      message: 'Не заполнены все обязательные поля формы',
+      position: 'top',
+      progress: true
+    })
+
+    return false
+  }
+
   isSubmitLoading.value = true
 
   const orderTextData =
-`
-  Телефон: ${phone.value}
-  Имя: ${name.value}
-  Компания: ${company.value}
-  ИНН: ${inn.value}
+`Телефон: ${phone.value}
+Имя: ${name.value}
+Компания: ${company.value}
+ИНН: ${inn.value}
 
-  Сегмент: ${selectedSegment.value?.label ?? ''}
-  Вендор: ${selectedVendor.value?.label ?? ''}
-  Кол-во: ${quantity.value}
-  Предоплата: ${prepayment.value}
+Сегмент: ${selectedSegment.value?.label ?? ''}
+Вендор: ${selectedVendor.value?.label ?? ''}
+Кол-во: ${quantity.value}
+Предоплата: ${prepayment.value}
 
-  Доставка: ${selectedTerms.value?.label ?? ''}
-  Срок поставки: ${date.value}
+Доставка: ${selectedTerms.value?.label ?? ''}
+Срок поставки: ${date.value}
 
-  Дополнительная информация: ${additionalInfo.value}
-`
+Дополнительная информация: ${additionalInfo.value}`
 
-  const result = await putOrder(orderTextData)
+  let isInternalUser = true
+  let userId: string | string[]
+
+  try {
+    console.log('getUser')
+    userId = await getUser(phone.value)
+    console.log(userId)
+
+    if (!userId.length) {
+      console.log('getContact')
+      userId = await getContact(phone.value)
+      isInternalUser = false
+      console.log(userId)
+    }
+
+    if (!userId.length) {
+      console.log('addContact')
+      const userId = await addContact({
+        name: name.value,
+        lastName: '',
+        phone: phone.value
+      })
+
+      console.log(userId)
+    }
+
+    if (userId) {
+      const result = await putOrder(orderTextData, userId)
+      console.log(result)
+
+      $q.notify({
+        icon: 'done',
+        color: 'positive',
+        message: 'Заявка №333 создана',
+        position: 'top',
+        progress: true
+      })
+    }
+  } catch (e) {
+    $q.notify({
+      icon: 'done',
+      color: 'negative',
+      message: 'Ошибка\n' + e,
+      position: 'top',
+      progress: true
+    })
+  }
+
   isSubmitLoading.value = false
-  console.log(result)
 }
 
 function fnMarkerLabel(value: string) {
@@ -114,15 +223,24 @@ function fnMarkerLabel(value: string) {
         </div>
 
         <div class="configurator-form__form-element">
-          <CInput v-model="name" label="Имя"/>
+          <CInput
+              v-model="name"
+              label="Имя"
+          />
         </div>
 
         <div class="configurator-form__form-element">
-          <CInput v-model="company" label="Название компании"/>
+          <CInput
+              v-model="company"
+              label="Название компании"
+          />
         </div>
 
         <div class="configurator-form__form-element">
-          <CInput v-model="inn" label="ИНН"/>
+          <CInput
+              v-model="inn"
+              label="ИНН"
+          />
         </div>
       </div>
 
@@ -141,7 +259,12 @@ function fnMarkerLabel(value: string) {
         </div>
 
         <div class="configurator-form__form-element">
-          <CSelect v-model="selectedVendor" :options="vendors" @input="handleSelectVendor" label="Вендор"/>
+          <CSelect
+              v-model="selectedVendor"
+              :options="vendors"
+              @input="handleSelectVendor"
+              label="Вендор"
+          />
         </div>
 
 
@@ -159,17 +282,25 @@ function fnMarkerLabel(value: string) {
 
       <div class="configurator-form__group">
         <div class="configurator-form__form-element">
-          <CInput type="number" v-model="quantity" label="Кол-во позиций"/>
+          <CInput type="number" v-model="quantity" label="Кол-во позиций" />
         </div>
         <div class="configurator-form__form-element">
-          <CSelect v-model="selectedTerms" :options="terms" @input="handleSelectTerms" label="Условия поставки"/>
+          <CSelect
+              v-model="selectedTerms"
+              :options="terms"
+              @input="handleSelectTerms"
+              label="Условия поставки"
+          />
         </div>
 
         <div class="configurator-form__title" style="margin-top: 24px">
           Ожидаемый срок поставки
         </div>
         <div class="configurator-form__form-element">
-          <CInput type="date" v-model="date" />
+          <CInput
+              type="date"
+              v-model="date"
+          />
         </div>
 
         <div class="configurator-form__title" style="margin-top: 24px">
@@ -193,7 +324,12 @@ function fnMarkerLabel(value: string) {
     </div>
 
     <div class="configurator-form__submit">
-      <CButton :loading="isSubmitLoading" @click="handleSubmit">Отправить</CButton>
+      <CButton
+          :loading="isSubmitLoading"
+          @click="handleSubmit"
+          :disable="!validate()"
+          disable-text="Заполните все поля формы"
+      >Отправить</CButton>
     </div>
 
   </div>

@@ -7,6 +7,8 @@ defineProps<{
   label?: string,
   type?: InputType,
   rules?: ValidationRule[] | undefined
+  error?: boolean
+  hint?: string
 }>()
 
 type InputType =
@@ -36,10 +38,14 @@ function handleInput(value: string | number | null) {
     <q-input
         :model-value="modelValue"
         @update:modelValue="handleInput"
+        :bg-color="modelValue ? 'secondary' : null"
         outlined
         :label="label"
         :type="type"
         :rules="rules"
+        :error="error"
+        :hint="hint"
+        reactive-rules
     />
   </div>
 </template>

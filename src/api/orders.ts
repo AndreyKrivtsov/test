@@ -1,30 +1,42 @@
 import api from './api'
+import type { ApiCrmResponse } from '@/types'
+import type { Users } from '@/api/users'
 
 interface OrderResponse {
-    [key: string]: string
+    item: {
+        id: string
+    }
 }
 
 export async function getOrders() {
-    const result = await api.post<OrderResponse>('crm.item.list', {
+    const result = await api.post<ApiCrmResponse<OrderResponse>>('crm.item.list', {
         entityTypeId: 140,
         select: ['id', 'title'],
         filter: {
             ufCrm6IntConsumer: 403,
         }
     })
-    return result.data
+    return result.data.result
 }
 
-export async function putOrder(description: string) {
-    const result = await api.post<OrderResponse>('crm.item.add', {
+export async function putOrder(description: string, userId: string | Users) {
+    let userIds
+    if (typeof userId === 'string') {
+        userIds = [userId]
+    } else {
+        userIds = userId
+    }
+
+    const result = await api.post<ApiCrmResponse<OrderResponse>>('crm.item.add', {
         entityTypeId: 140,
         fields: {
             ufCrm6Specification: {
                 '0': ['fileName', 'base64Image'],
             },
             ufCrm6Description: description,
-            ufCrm6IntConsumer: 403
+            ufCrm6IntConsumer: 403,
+            contact_ids: userIds
         }
     })
-    return result.data
+    return result.data.result.item
 }

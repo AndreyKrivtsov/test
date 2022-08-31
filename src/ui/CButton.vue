@@ -3,6 +3,8 @@ import { defineEmits } from 'vue'
 
 defineProps<{
   loading: boolean
+  disable?: boolean
+  disableText: string
 }>()
 
 const emit = defineEmits<{
@@ -12,7 +14,17 @@ const emit = defineEmits<{
 
 <template>
   <div class="configurator-button">
-    <q-btn @click="emit('click')" :loading="loading"><slot></slot></q-btn>
+    <q-btn
+        @click="emit('click')"
+        color="primary"
+        :loading="loading"
+        :disable="disable"
+    >
+      <slot></slot>
+    </q-btn>
+    <q-tooltip v-if="disable">
+       {{ disableText }}
+    </q-tooltip>
   </div>
 </template>
 

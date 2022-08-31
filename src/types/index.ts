@@ -1,3 +1,7 @@
+interface ApiCrmResponse<T> {
+    result: T
+}
+
 interface SelectOption {
     label: string
     value: string
@@ -5,5 +9,6 @@ interface SelectOption {
 }
 
 export type {
+    ApiCrmResponse,
     SelectOption
 }
