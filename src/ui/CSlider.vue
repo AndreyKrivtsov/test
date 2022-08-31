@@ -22,7 +22,7 @@ function handleInput(value: number | null) {
   <div class="configurator-slider">
     <q-slider
         :model-value="modelValue"
-        color="secondary"
+        color="primary"
         :min="min"
         :max="max"
         :markers="markers"

@@ -46,7 +46,11 @@ function handleInput(value: string | number | null) {
         :error="error"
         :hint="hint"
         reactive-rules
-    />
+    >
+      <template v-if="modelValue" v-slot:append>
+        <q-icon name="done" color="primary"/>
+      </template>
+    </q-input>
   </div>
 </template>
 

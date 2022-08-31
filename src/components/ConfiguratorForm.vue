@@ -60,49 +60,24 @@ const date = ref('')
 const additionalInfo = ref('')
 const isSubmitLoading = ref(false)
 
-const errors = ref({
-  phone: '',
-  name: '',
-  company: '',
-  inn: '',
-  selectedSegment: '',
-  selectedVendor: '',
-  selectedTerms: '',
-  date: '',
-})
-
 function validate() {
   let isError = false
 
   if (!phone.value) {
     isError = true
-  }
-
-  if (!name.value) {
+  } else if (!name.value) {
     isError = true
-  }
-
-  if (!company.value) {
+  } else if (!company.value) {
     isError = true
-  }
-
-  if (!inn.value) {
+  } else if (!inn.value) {
     isError = true
-  }
-
-  if (!selectedSegment.value) {
+  } else if (!selectedSegment.value) {
     isError = true
-  }
-
-  if (!selectedVendor.value) {
+  } else if (!selectedVendor.value) {
     isError = true
-  }
-
-  if (!selectedTerms.value) {
+  } else if (!selectedTerms.value) {
     isError = true
-  }
-
-  if (!date.value) {
+  } else if (!date.value) {
     isError = true
   }
 
@@ -155,36 +130,28 @@ async function handleSubmit() {
   let userId: User | User[]
 
   try {
-    console.log('getUser')
     userId = await getUser(phone.value)
-    console.log(userId)
 
     if (!userId.length) {
-      console.log('getContact')
       userId = await getContact(phone.value)
       isInternalUser = false
-      console.log(userId)
     }
 
     if (!userId.length) {
-      console.log('addContact')
-      const userId = await addContact({
+      userId = await addContact({
         name: name.value,
         lastName: '',
         phone: phone.value
       })
-
-      console.log(userId)
     }
 
     if (userId) {
-      const result = await putOrder(orderTextData, userId)
-      console.log(result)
+      const order = await putOrder(orderTextData, userId)
 
       $q.notify({
         icon: 'done',
         color: 'positive',
-        message: 'Заявка №333 создана',
+        message: `Заявка № ${order.id} создана`,
         position: 'top',
         progress: true
       })

@@ -31,7 +31,11 @@ function handleInput(event: SelectOption) {
         :error="error"
         :bg-color="modelValue ? 'secondary' : undefined"
         outlined
-    />
+    >
+      <template v-if="modelValue" v-slot:append>
+        <q-icon name="done" color="primary"/>
+      </template>
+    </q-select>
   </div>
 </template>
 
