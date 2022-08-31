@@ -1,6 +1,6 @@
 import api from './api'
 import type { ApiCrmResponse } from '@/types'
-import type { Users } from '@/api/users'
+import type { User } from '@/api/users'
 
 interface OrderResponse {
     item: {
@@ -19,7 +19,7 @@ export async function getOrders() {
     return result.data.result
 }
 
-export async function putOrder(description: string, userId: string | Users) {
+export async function putOrder(description: string, userId: string | User[]) {
     let userIds
     if (typeof userId === 'string') {
         userIds = [userId]

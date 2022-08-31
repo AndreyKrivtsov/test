@@ -38,7 +38,7 @@ function handleInput(value: string | number | null) {
     <q-input
         :model-value="modelValue"
         @update:modelValue="handleInput"
-        :bg-color="modelValue ? 'secondary' : null"
+        :bg-color="modelValue ? 'secondary' : undefined"
         outlined
         :label="label"
         :type="type"

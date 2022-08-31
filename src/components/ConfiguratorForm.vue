@@ -9,6 +9,7 @@ import CButton from '@/ui/CButton.vue'
 import CSelect from '@/ui/CSelect.vue'
 import CSlider from '@/ui/CSlider.vue'
 import type { SelectOption } from '@/types'
+import type { User } from '@/api/users'
 
 defineProps<{
   msg: string
@@ -151,7 +152,7 @@ async function handleSubmit() {
 Дополнительная информация: ${additionalInfo.value}`
 
   let isInternalUser = true
-  let userId: string | string[]
+  let userId: User | User[]
 
   try {
     console.log('getUser')

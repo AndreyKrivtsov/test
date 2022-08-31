@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineEmits } from 'vue'
 import type { SelectOption } from '@/types'
-import { ValidationRule } from 'quasar'
+import type { ValidationRule } from 'quasar'
 
 defineProps<{
   modelValue: SelectOption | undefined
@@ -29,7 +29,7 @@ function handleInput(event: SelectOption) {
         @update:model-value="handleInput"
         :rules="rules"
         :error="error"
-        :bg-color="modelValue ? 'secondary' : null"
+        :bg-color="modelValue ? 'secondary' : undefined"
         outlined
     />
   </div>

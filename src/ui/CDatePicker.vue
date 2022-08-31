@@ -19,7 +19,7 @@ function handleInput(value: string) {
     <q-date
         :model-value="modelValue"
         @update:model-value="handleInput"
-        :bg-color="modelValue ? 'secondary' : null"
+        :bg-color="modelValue ? 'secondary' : undefined"
         minimal
     />
   </div>
